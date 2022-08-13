@@ -1,0 +1,61 @@
+#+TITLE: Jitis-elecrton集成笔记
+#+Author: 李照宇
+#+Email: kevin.li@reacreation.org
+#+CATEGORY: org-mode
+#+STARTUP: latexpreview
+#+STARTUP: indent number
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_PLUGINS: (highlight)
+#+REVEAL_THEME: league
+#+OPTIONS: toc:nil
+#+OPTIONS: prop:t
+#+LATEX_COMPILER: xelatex
+#+LATEX_CLASS: elegantpaper
+#+LATEX_HEADER: \usepackage{xeCJK}
+#+LATEX_HEADER: \setCJKmainfont{Hiragino Sans GB}
+#+LATEX_HEADER: \hypersetup{colorlinks=true,linkcolor=blue}
+
+
+* 集成的过程
+** 使用shadow-cljs-electron的模板生成项目
+从[[https://github.com/zhaoyul/shadow-electron][我的github repo]]的template创建
+** 集成 jitis electron SDK
+~npm install @jitsi/electron-sdk~
+** 在render添加API
+从往上下载external_api.js并且放置在 ~resources/js/~ 目录下
+* 遇到的问题
+** JitsiMeetExternalAPI 这个对象是如何得到的
+和所有的外部js一样, 可以在index.html引入, 和所有的js对象一样, 可以在cljs中使用 ~js~ 这个namespace访问到
+#+BEGIN_SRC clojure
+(new js/JitsiMeetExternalAPI domain options)
+#+END_SRC
+** 默认的模版中不能使用nodejs集成
+增加参数后解决, 这应该是electron14后引入的一个问题, 需要深入了解:enableRemoteModule 和 :contextIsolation的涵义.
+#+begin_src diff
+   (defn init-browser []
+     (reset! main-window (BrowserWindow.
+  -                        (clj->js {:width 800
+  -                                  :height 600
+  -                                  :webPreferences
+  -                                  {:nodeIntegration true}})))
+  -  ; Path is relative to the compiled js file (main.js in our case)
+  +                       (clj->js {:width 800
+  +                                 :height 600
+  +                                 :webPreferences
+  +                                 {:nodeIntegration true
+  +                                  :enableRemoteModule true
+  +                                  :contextIsolation false}})))
+  +                                        ; Path is relative to the compiled js file (main.js in our case)
+
+#+end_src
+** Jitis怎么修改UI
+Jitis是一个高度封装的系统, 在一个单独的iframe中嵌入音视频能力
+Electron-SDK中的UI其实是借助了iframe API的直接调用, 在这个SDK中没有界面修改的地方
+界面从方案上, 我们尽可能的继承Jitis的界面, 替换部分资源
+** Electron提供的能力
+* 参考资料
+- [[https://github.com/jitsi/jitsi-meet-electron-sdk][jitis-electron-sdk]] github 项目页面
+- [[https://github.com/electron/electron/blob/main/docs/api/window-open.md][elecrton open window]] 参考资料
+- [[https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-iframe/][jitis-iframe-api]] API参考
+
+
