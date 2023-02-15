@@ -16,7 +16,6 @@
   "author": "kevin li",
   "license": "RedCreation Co., ltd.",
   "dependencies": {
-    "@jitsi/electron-sdk": "^3.0.15",
     "electron": "^16.0.7",
     "electron-packager": "^15.4.0",
     "react": "^17.0.2",

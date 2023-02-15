@@ -1,10 +1,6 @@
 (ns app.main.core
-  (:require ["electron" :refer [app BrowserWindow crashReporter]]
-            ["@jitsi/electron-sdk" :refer [RemoteControlMain]]))
+  (:require ["electron" :refer [app BrowserWindow crashReporter]]))
 
-#_(def remoteControl (RemoteControl. iframe))
-
-#_(def remoteControl (RemoteControlMain. mainWindow))
 
 (def main-window (atom nil))
 

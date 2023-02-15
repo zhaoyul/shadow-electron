@@ -2,20 +2,6 @@
   (:require [reagent.core :refer [atom]]
             [reagent.dom :as rd]))
 
-(defonce sdk (js/require "@jitsi/electron-sdk"))
-
-(def options
-  #js
-  {:roomName "JitsiMeetAPIExample",
-   :width 700,
-   :height 700,
-   :parentNode (js/document.querySelector "#app-container"),
-   :lang "en"})
-
-(def domain "meet.jit.si")
-
-(def api (new js/JitsiMeetExternalAPI domain options))
-
 
 (defonce state (atom 0))
 
