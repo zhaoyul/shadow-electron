@@ -1,5 +1,5 @@
 # shadow-electron-starter
-ClojureScript + Shadow-cljs + Electron + Reagent
+ClojureScript + Shadow-cljs + Electron + Reagent + MaterialUI.
 
 ## How to Run
 ```
